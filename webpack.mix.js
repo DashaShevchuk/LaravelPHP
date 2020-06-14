@@ -21,3 +21,5 @@ mix.copy('node_modules/tinymce/jquery.tinymce.js', 'public/node_modules/tinymce/
 mix.copy('node_modules/tinymce/jquery.tinymce.min.js', 'public/node_modules/tinymce/jquery.tinymce.min.js');
 mix.copy('node_modules/tinymce/tinymce.js', 'public/node_modules/tinymce/tinymce.js');
 mix.copy('node_modules/tinymce/tinymce.min.js', 'public/node_modules/tinymce/tinymce.min.js');
+
+mix.copyDirectory('node_modules/tinymce-i18n/langs', 'public/node_modules/tinymce-i18n/langs');

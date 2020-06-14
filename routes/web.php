@@ -23,3 +23,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('contacts', 'ContactController');
 Route::resource('categories', 'CategoryController');
 Route::resource('products', 'ProductController');
+Route::post('products/upload', 'ProductController@upload');

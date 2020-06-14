@@ -1,97 +1,9 @@
 @extends('base')
 
 @section('main')
-    <!DOCTYPE html>
-<head>
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/froala_editor.css">
-    <link rel="stylesheet" href="/css/froala_style.css">
-    <link rel="stylesheet" href="/css/plugins/code_view.css">
-    <link rel="stylesheet" href="/css/plugins/image_manager.css">
-    <link rel="stylesheet" href="/css/plugins/image.css">
-    <link rel="stylesheet" href="/css/plugins/table.css">
-    <link rel="stylesheet" href="/css/plugins/video.css">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css">
-    <!-- Styles -->
-    <style>
-        html, body {
-            background-color: #fff;
-            color: #636b6f;
-            font-family: 'Nunito', sans-serif;
-        }
-    </style>
-
-</head>
-<body>
-<script>
-    $(function() {
-        $('#edit').froalaEditor({
-
-            imageUploadURL: './upload_image.php',
-            imageUploadParams: {
-                id: 'my_editor'
-            },
-
-            fileUploadURL: './upload_file.php',
-            fileUploadParams: {
-                id: 'my_editor'
-            },
-
-            imageManagerLoadURL: './load_images.php',
-            imageManagerDeleteURL: "./delete_image.php",
-            imageManagerDeleteMethod: "POST"
-        })
-            // Catch image removal from the editor.
-            .on('froalaEditor.image.removed', function (e, editor, $img) {
-                $.ajax({
-                    // Request method.
-                    method: "POST",
-
-                    // Request URL.
-                    url: "./delete_image.php",
-
-                    // Request params.
-                    data: {
-                        src: $img.attr('src')
-                    }
-                })
-                    .done (function (data) {
-                        console.log ('image was deleted');
-                    })
-                    .fail (function (err) {
-                        console.log ('image delete problem: ' + JSON.stringify(err));
-                    })
-            })
-
-            // Catch image removal from the editor.
-            .on('froalaEditor.file.unlink', function (e, editor, link) {
-
-                $.ajax({
-                    // Request method.
-                    method: "POST",
-
-                    // Request URL.
-                    url: "./delete_file.php",
-
-                    // Request params.
-                    data: {
-                        src: link.getAttribute('href')
-                    }
-                })
-                    .done (function (data) {
-                        console.log ('file was deleted');
-                    })
-                    .fail (function (err) {
-                        console.log ('file delete problem: ' + JSON.stringify(err));
-                    })
-            })
-    });
-</script>
     <div class="row">
         <div class="col-sm-8 offset-sm-2">
-            <h1 class="display-3">Add a category</h1>
+            <h1 class="display-3">Створити категорію</h1>
             <div>
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -100,69 +12,120 @@
                                 <li>{{ $error }}</li>
                             @endforeach
                         </ul>
-                    </div><br />
+                    </div><br/>
                 @endif
-                <form method="post" action="{{ route('categories.store') }}">
+                <form id="create" method="post" action="{{ route('categories.store') }}">
                     @csrf
                     <div class="form-group">
-                        <label for="first_name">Name:</label>
+                        <label for="name">Назва категорії:</label>
                         <input type="text" class="form-control" name="name"/>
                     </div>
 
                     <div class="form-group">
-                        <label for="last_name">Description:</label>
-                        <textarea id="edit-validation" name="content"></textarea>
-                        </div>
+                        <img class="chose-image" src="{{ asset('images/200_default.png') }}"
+                             id="chooseImage" alt="Обрати фото">
+                        <input type="hidden" name="base64Image" id="base64Image">
+
 
                     </div>
 
                     <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="text" class="form-control" name="email"/>
+                        <label for="email">Опис:</label>
+                        <textarea class="form-control" name="description" id="description" rows="10" cols="45"></textarea>
                     </div>
+
                     <button type="submit" class="btn btn-primary">Add contact</button>
                 </form>
             </div>
         </div>
     </div>
-</body>
-<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js"></script>
-<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js"></script>
-<script type="text/javascript" src="/js/froala_editor.min.js"></script>
-<script type="text/javascript" src="/js/plugins/align.min.js"></script>
-<script type="text/javascript" src="/js/plugins/code_beautifier.min.js"></script>
-<script type="text/javascript" src="/js/plugins/code_view.min.js"></script>
-<script type="text/javascript" src="/js/plugins/draggable.min.js"></script>
-<script type="text/javascript" src="/js/plugins/image.min.js"></script>
-<script type="text/javascript" src="/js/plugins/image_manager.min.js"></script>
-<script type="text/javascript" src="/js/plugins/link.min.js"></script>
-<script type="text/javascript" src="/js/plugins/lists.min.js"></script>
-<script type="text/javascript" src="/js/plugins/paragraph_format.min.js"></script>
-<script type="text/javascript" src="/js/plugins/paragraph_style.min.js"></script>
-<script type="text/javascript" src="/js/plugins/table.min.js"></script>
-<script type="text/javascript" src="/js/plugins/video.min.js"></script>
-<script type="text/javascript" src="/js/plugins/url.min.js"></script>
-<script type="text/javascript" src="/js/plugins/entities.min.js"></script>
 
-<script>
-    function cl(){
-        console.log(getElementById("edit"));
-    }
-    (function () {
-        const editorInstance = new FroalaEditor('#edit', {
-            enter: FroalaEditor.ENTER_P,
-            placeholderText: null,
-            events: {
-                initialized: function () {
-                    const editor = this
-                    this.el.closest('form').addEventListener('submit', function (e) {
-                    })
-                }
-            }
+    <!-- Modal -->
+    @include('view._croper-modal');
+@endsection
+
+@section('scripts')
+    <script>
+        jQuery(function () {
+            //фото по якому клікаємо і обираємо файл
+            $chooseImage = $("#chooseImage");
+            //текстове поле із base64
+            $base64Image = $("#base64Image");
+            //скритий інпут для вибору файла
+            $selectImage = $("#selectImage");
+            let dialogCropper = $("#cropperModal");
+            //клікнули по фото і клікаємо по скритому інпуту файл
+            $chooseImage.on("click", function () {
+                let uploader = $('<input type="file" accept="image/*" />');
+                uploader.click()
+                uploader.on('change', function () {
+                    if (this.files && this.files.length) {
+                        let file = this.files[0];
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            dialogCropper.modal('show');
+                            cropper.replace(e.target.result);
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+            //запуск кропера
+            const imageCropper = document.getElementById('imageCropper');
+            const cropper = new Cropper(imageCropper, {
+                aspectRatio: 1 / 1,
+                viewMode: 1,
+                autoCropArea: 0.5,
+                crop(event) {
+                    // console.log(event.detail.x);
+                    // console.log(event.detail.y);
+                    // console.log(event.detail.width);
+                    // console.log(event.detail.height);
+                    // console.log(event.detail.rotate);
+                    // console.log(event.detail.scaleX);
+                    // console.log(event.detail.scaleY);
+                },
+            });
+            //поворот малюнка
+            $("#img-rotation").on("click", function (e) {
+                e.preventDefault();
+                cropper.rotate(45);
+            });
+            //обрізка малюнка
+            $("#cropImg").on("click", function (e) {
+                e.preventDefault();
+                var imgContent = cropper.getCroppedCanvas().toDataURL();
+                $chooseImage.attr("src", imgContent);
+                dialogCropper.modal('hide');
+                $base64Image.val(imgContent);
+            });
         })
-    })()
-</script>
-</html>
+    </script>
+
+    //запускаємо фороалу едітор
+
+    <script src="{{ asset('node_modules/tinymce/tinymce.js') }}"></script>
+    <script src="{{ asset('node_modules/tinymce-i18n/langs/uk.js') }}"></script>
+
+    <script>
+        $(function () {
+            tinymce.init({
+                selector: 'textarea#description',
+                language: "uk",
+                theme: "silver",
+                menubar: true,
+                skin: 'oxide-dark',
+                content_css: 'dark',
+                plugins: [
+                    "advlist autolink lists link image charmap print preview anchor",
+                    "searchreplace visualblocks code fullscreen",
+                    "insertdatetime media table paste code help wordcount",
+                ],
+                toolbar:
+                    "undo redo | formatselect | bold italic backcolor | \
+         alignleft aligncenter alignright alignjustify | \
+         bullist numlist outdent indent | removeformat | help",
+            });
+        });
+    </script>
 @endsection
