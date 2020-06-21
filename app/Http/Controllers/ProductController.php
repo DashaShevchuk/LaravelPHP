@@ -53,11 +53,10 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'name'=>'required',
-            'description'=>'required'
-        ]);
+    { $request->validate([
+        'name'=>'required',
+        'description'=>'required'
+    ]);
 
         $product = new Product([
             'name' => $request->get('name'),
@@ -101,7 +100,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::find($id);
-        return view('products.edit', compact('product'));
+        return view('products.edit',  ['product' => $product]);
     }
 
     /**
@@ -113,21 +112,22 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name'=>'required',
-            'price'=>'required',
-            'count'=>'required',
-            'description'=>'required',
-        ]);
-
-        $product = Product::find($id);
-        $product->name =  $request->get('name');
-        $product->price = $request->get('price');
-        $product->count = $request->get('count');
+        $product = \App\Product::find($id);
+        $product->name = $request->get('name');
         $product->description = $request->get('description');
+        //$product->price = $request->get('price');
+        $product->price = 45;
         $product->save();
 
-        return redirect('/products')->with('success', 'Product updated!');
+        $listImages=$request-> get("productImages");
+        if($listImages!=null) {
+            foreach ($listImages as $id) {
+                $pi = ProductImage::find($id);
+                $pi->product_id = $product->id;
+                $pi->save();
+            }
+        }
+        return redirect('/products')->with('success', 'Продукт успішно змінено!');
     }
 
     /**
@@ -150,10 +150,8 @@ class ProductController extends Controller
         $img_url = Str::uuid().'.jpg';
         $path = public_path('images/105_').$img_url;
         my_image_resize(105,80, $path, $base64_image);
-        $path = public_path('images/420_').$img_url;
-        my_image_resize(420,320, $path, $base64_image);
-        $path = public_path('images/840_').$img_url;
-        my_image_resize(840,640, $path, $base64_image);
+        $path = public_path('images/820_').$img_url;
+        my_image_resize(820,620, $path, $base64_image);
 
         $productImage = new ProductImage([
             'name' => $img_url,
@@ -161,7 +159,7 @@ class ProductController extends Controller
         ]);
         $productImage->save();
 
-        return response()->json(['id'=> $productImage->id, 'url'=>'/images/420_'.$img_url]);
+        return response()->json(['id'=> $productImage->id, 'url'=>'/images/820_'.$img_url]);
     }
 }
 

@@ -2,9 +2,9 @@
 
 @section('main')
     <div class="content">
-        <h1>Категорії зоомагазину</h1>
+        <h1>Категорії :</h1>
 
-        <a href="{{ route('categories.create') }}" class="btn btn-success">Додати категорію</a>
+        <a href="{{ route('categories.create') }}" class="btn btn-primary">Додати категорію</a>
         <div class="container">
             <div class="row">
                 @foreach ($allCategories as $category)

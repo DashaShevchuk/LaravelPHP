@@ -40,11 +40,29 @@
 @endsection
 
 @section('scripts')
+    <script>
+        function rmImg(id) {
+            axios.get('/products/removeImage/'+id)
+                .then((resp) => {
 
+                    console.log("Result", resp);
+                });
+
+        }
+        (function ($) {
+            @foreach ($product->productImages as $image)
+
+            $('.images').prepend('<div class="img" onclick="rmImg('+"{{$image->id}}"+')" style="background-image: url(' + "{{'/images/820_'.$image->name}}" + ');" rel="' + "{{'/images/820_'.$image->name}}" + '"><span >remove</span></div>');
+            {{--$('.images').prepend('<input type="hidden" name="productImages[]" value="' + "{{$image->id}}" + '">');--}}
+            @endforeach
+        })(jQuery);
+    </script>
     <script>
         (function ($) {
             $(document).ready(function () {
                 //загрузка фото на клік
+
+
                 uploadImage();
                 //загрузка фото на клік
                 function uploadImage() {
@@ -78,7 +96,7 @@
                                     .then((resp) => {
                                         let url = resp.data.url;
                                         let id = resp.data.id;
-                                        images.prepend('<div class="img" style="background-image: url(' + url + ');" rel="' + url + '"><span>remove</span></div>');
+                                        images.prepend('<div class="img" onclick="rmImg('+id+')" style="background-image: url(' + url + ');" rel="' + url + '"><span>remove</span></div>');
                                         images.prepend('<input type="hidden" name="productImages[]" value="' + id + '">');
                                         console.log("Result", resp);
                                     });
