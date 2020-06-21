@@ -14,7 +14,7 @@
 
         <div class="col-sm-12">
 
-            <h1 class="display-3">Продукти</h1>
+            <h1 class="display-3">Products</h1>
             <div>
                 <a style="margin: 19px;" href="{{ route('products.create')}}" class="btn btn-primary">Додати продукт</a>
             </div>
