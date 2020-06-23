@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::paginate(1);
         //$product = Product::find(1);
         //$listImages = $product->productImages;
 
@@ -53,10 +53,11 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    { $request->validate([
-        'name'=>'required',
-        'description'=>'required'
-    ]);
+    {
+        $request->validate([
+            'name'=>'required',
+            'description'=>'required'
+        ]);
 
         $product = new Product([
             'name' => $request->get('name'),
@@ -115,8 +116,7 @@ class ProductController extends Controller
         $product = \App\Product::find($id);
         $product->name = $request->get('name');
         $product->description = $request->get('description');
-        //$product->price = $request->get('price');
-        $product->price = 45;
+        $product->price = $request->get('price');
         $product->save();
 
         $listImages=$request-> get("productImages");
@@ -140,8 +140,14 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         $product->delete();
+        return redirect('/products')->with('success', 'Продукт успішно Видалено!');
+    }
 
-        return redirect('/products')->with('success', 'Product deleted!');
+    public function removeImage($id)
+    {
+        $productImage = ProductImage::find($id);
+        $productImage->delete();
+        return ("Ok");
     }
 
     public function upload(Request $request)
@@ -150,8 +156,10 @@ class ProductController extends Controller
         $img_url = Str::uuid().'.jpg';
         $path = public_path('images/105_').$img_url;
         my_image_resize(105,80, $path, $base64_image);
-        $path = public_path('images/820_').$img_url;
-        my_image_resize(820,620, $path, $base64_image);
+        $path = public_path('images/420_').$img_url;
+        my_image_resize(420,320, $path, $base64_image);
+        $path = public_path('images/840_').$img_url;
+        my_image_resize(840,640, $path, $base64_image);
 
         $productImage = new ProductImage([
             'name' => $img_url,
@@ -159,7 +167,7 @@ class ProductController extends Controller
         ]);
         $productImage->save();
 
-        return response()->json(['id'=> $productImage->id, 'url'=>'/images/820_'.$img_url]);
+        return response()->json(['id'=> $productImage->id, 'url'=>'/images/420_'.$img_url]);
     }
 }
 

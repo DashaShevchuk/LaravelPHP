@@ -1,4 +1,3 @@
-
 @extends('base')
 
 @section('main')
@@ -14,7 +13,7 @@
 
         <div class="col-sm-12">
 
-            <h1 class="display-3">Products</h1>
+            <h1 class="display-3">Продукти</h1>
             <div>
                 <a style="margin: 19px;" href="{{ route('products.create')}}" class="btn btn-primary">Додати продукт</a>
             </div>
@@ -57,6 +56,9 @@
                 @endforeach
                 </tbody>
             </table>
+            <div style="display: flex; justify-content: center; margin-top: 25px">
+                {!! $products->links() !!}
+            </div>
             <div>
             </div>
 @endsection
